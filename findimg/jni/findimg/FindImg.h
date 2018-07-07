@@ -44,7 +44,7 @@ int compareColor(int color1, int color2, int offr, int offg, int offb) {
 	}
 	return true;
 }
-//Í¼Æ¬ÑÕÉ«·Ö¼¶£¬×îµÍ1¼¶£¬×î¸ß256¼¶£¬¼¶±ğÔ½¸ß£¬ºÄÊ±Ô½³¤£¬¾«È·¶ÈÔ½¸ß
+//å›¾ç‰‡é¢œè‰²åˆ†çº§ï¼Œæœ€ä½1çº§ï¼Œæœ€é«˜256çº§ï¼Œçº§åˆ«è¶Šé«˜ï¼Œè€—æ—¶è¶Šé•¿ï¼Œç²¾ç¡®åº¦è¶Šä½
 void splitLevel(Img *img, int level) {
 	if (level < 1) {
 		level = 1;
@@ -68,7 +68,7 @@ void splitLevel(Img *img, int level) {
 		}
 	}
 }
-//É¨Ãèµ¥¸öÌØÕ÷
+//æ‰«æå•ä¸ªç‰¹å¾
 void scanImgBlock(ImgBlock *out,Img *img,int **hasScan,PointScan *pointScan,int posx,int posy, int offr, int offg, int offb, int distance, float sim) {
 	
 	int color = img->GetColor(posx, posy);
@@ -82,11 +82,11 @@ void scanImgBlock(ImgBlock *out,Img *img,int **hasScan,PointScan *pointScan,int 
 				
 				int x = point.x + i;
 				int y = point.y + j;
-				//Èç¹ûÔ½½ç£¬¼ÌĞøÑ­»·
+				//å¦‚æœè¶Šç•Œï¼Œç»§ç»­å¾ªç¯
 				if (x < 0 || x > img->width - 1 || y < 0 || y > img->height - 1) {
 					continue;
 				}
-				//ÅĞ¶ÏÊÇ·ñ¿ÉÒÔÌí¼Ó
+				//åˆ¤æ–­æ˜¯å¦å¯ä»¥æ·»åŠ 
 				int colorTemp = img->GetColor(x, y);
 				if (colorTemp == color && hasScan[x][y] == 0) {
 					hasScan[x][y] = 1;
@@ -141,7 +141,7 @@ int scanAllImgBlock(ImgBlock *limitColor,ImgBlockArray *out, Img *img, int left,
 	if (bottom > img->height - 1) {
 		bottom = img->height - 1;
 	}
-	//´´½¨hasScanÊı×é
+	//åˆ›å»ºhasScanæ•°ç»„
 	int **hasScan = new int*[img->width];
 	for (int i = 0; i < img->width; i++) {
 		hasScan[i] = new int[img->height];
@@ -149,10 +149,10 @@ int scanAllImgBlock(ImgBlock *limitColor,ImgBlockArray *out, Img *img, int left,
 			hasScan[i][j] = 0;
 		}
 	}
-	//´´½¨pointScanÍ³¼ÆÀà
+	//åˆ›å»ºpointScanç»Ÿè®¡ç±»
 	PointScan * pointScan = new PointScan(img->width*img->height);
 
-	//É¨Ãè
+	//æ‰«æ
 	for (int i = left; i <= right; i++) {
 		for (int j = top; j <= bottom; j++) {
 			if (hasScan[i][j]) {
@@ -172,9 +172,9 @@ int scanAllImgBlock(ImgBlock *limitColor,ImgBlockArray *out, Img *img, int left,
 		}
 	}
 
-	//ÊÍ·ÅpointScan
+	//é‡Šæ”¾pointScan
 	delete pointScan;
-	//ÊÍ·ÅhasScanÊı×é
+	//é‡Šæ”¾hasScanæ•°ç»„
 	for (int i = 0; i < img->width; i++) {
 		delete [] hasScan[i];
 	}
@@ -194,7 +194,7 @@ ImgBlock *getMaxBlock(ImgBlockArray *blocks) {
 	}
 	return ret;
 }
-//±È½Ï2¸öÌØÕ÷£¨µÄÑÕÉ«ÒÔ¼°ÑÕÉ«¾ØÕó)ÊÇ·ñÏàÍ¬
+//æ¯”è¾ƒ2ä¸ªç‰¹å¾ï¼ˆçš„é¢œè‰²ä»¥åŠé¢œè‰²çŸ©é˜µ)æ˜¯å¦ç›¸åŒ
 int compareImgBlock(ImgBlock *big, ImgBlock *small, Rect * out,int offr,int offg,int offb,float sim) {
 	
 	if (compareColor(big->color, small->color, offr, offg, offb)==false) {
@@ -202,7 +202,7 @@ int compareImgBlock(ImgBlock *big, ImgBlock *small, Rect * out,int offr,int offg
 	}
 	float scaleX = small->Width() * 1.0f / big->Width();
 	float scaleY = small->Height() * 1.0f / big->Height();
-	//×î´ó´íÎóÊıÁ¿
+	//æœ€å¤§é”™è¯¯æ•°é‡
 	int maxDisCount = (int)((1.0 - sim) * big->s + 0.5);
 	int disCount = 0;
 	for (int i = big->left; i <= big->right; i++) {
@@ -219,7 +219,7 @@ int compareImgBlock(ImgBlock *big, ImgBlock *small, Rect * out,int offr,int offg
 				|| smally > small->bottom) {
 				continue;
 			}
-			//±È½ÏÑÕÉ«
+			//æ¯”è¾ƒé¢œè‰²
 			int smallColor = small->GetImg()->colors[smallx][smally];
 			if (compareColor(bigColor, smallColor, offr, offg, offb)==false) {
 				disCount++;
@@ -241,7 +241,7 @@ int compareImgBlock(ImgBlock *big, ImgBlock *small, Rect * out,int offr,int offg
 	return true;
 }
 
-//ÅĞ¶ÏÖ¸¶¨·¶Î§Ğ¡Í¼ÊÇ·ñÆ¥Åä
+//åˆ¤æ–­æŒ‡å®šèŒƒå›´å°å›¾æ˜¯å¦åŒ¹é…
 int compareImgRect(Img*bigImg, Img*smallImg,Rect *rect, int offr, int offg,
 	int offb, int distance, float sim) {
 	int left = rect->left;
@@ -284,7 +284,7 @@ int compareImgRect(Img*bigImg, Img*smallImg,Rect *rect, int offr, int offg,
 								break;
 							}
 							int c = bigImg->colors[tempx][tempy];
-							//±È½ÏÑÕÉ«
+							//æ¯”è¾ƒé¢œè‰²
 							if (compareColor(c, color1, offr, offg, offb)) {
 								err = false;
 								//break Err;
